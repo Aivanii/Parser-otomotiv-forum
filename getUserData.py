@@ -7,11 +7,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 from bs4 import BeautifulSoup
 import re
 
-def getUserDataByUrl(user_url):
-
-    # Setting up the driver
-    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
-
+def getUserDataByUrl(user_url, driver):
     # Navigating to the page
     driver.get(user_url)
 
@@ -72,9 +68,6 @@ def getUserDataByUrl(user_url):
 
     # Extracting role
     role = ', '.join([banner.text.strip() for banner in soup.find_all('strong')]) if soup.find_all('strong') else None
-
-    # Close driver
-    driver.quit()
     
     # Result output
     return({
