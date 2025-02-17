@@ -29,62 +29,52 @@ def getLinksForThreadsData():
                 soup = BeautifulSoup(src, 'lxml')
                 for forum in soup.find_all('a'): # выгрузка тем страницы
                     if str(forum.get('href'))[0:8] == "/threads":
-                        page = requests.get("https://otomotiv-forum.com/"+category.get('href'))
+                        page = requests.get("https://otomotiv-forum.com/"+forum.get('href'))
                         src = page.text
                         soup = BeautifulSoup(src, 'lxml')
                         for thread in soup.find_all('a'):# здесь будет выгрузка сообщений на странице\
                             print("https://otomotiv-forum.com"+thread.get('href')) # здесь должно выкидывать текст сообщения, но я пока не понял как
-
-
+    
 def getUserDataViaThreads():
+    users = [] # временный массив, для сохранения инфы юзверов. Заменить на БД
+    # массив необходимый для отсечения ссылок повторяющихся каждую страницу
+    not_to_check =[]
+    # выгрузка юзеров с первой страницы, включая недавно зарегистрировавшихся
     driver = webdriver.Chrome(service=Service(ChromeDriverManager().install())) # подключаем драйвер
+    page = requests.get("https://otomotiv-forum.com/members/list/", {"page": "1"})
+    src = page.text
+    soup = BeautifulSoup(src, 'lxml')
+
     last_link = ""
-    page = requests.get("https://otomotiv-forum.com/members/list/")
-    src = page.text
-    soup = BeautifulSoup(src, 'lxml')
-    for category in soup.find_all('a'): # выгрузка ссылок на форумы страницы
-        if str(category.get('href'))[0:7] == "/forums":
-            page = requests.get("https://otomotiv-forum.com/"+category.get('href'))
-            src = page.text
-            soup = BeautifulSoup(src, 'lxml')
-            for forum in soup.find_all('a'): # выгрузка ссылок на темы страницы
-                if str(forum.get('href'))[0:8] == "/threads":
-                    page = requests.get("https://otomotiv-forum.com/"+category.get('href'))
-                    src = page.text
-                    soup = BeautifulSoup(src, 'lxml')
-                    for thread in soup.find_all('a'):# здесь выгрузка ссылок на пользователей
-                        if str(thread.get('href'))[0:8] == "/members" and len(str(thread.get('href'))) > 14 and str(thread.get('href')) != last_link:
-                            last_link = str(thread.get('href')) # установка предыдущего профиля. Необходимо для меньшего повторения данных
-                            try: # проверка на доступность профиля.
-                                print(getUserData.getUserDataByUrl("https://otomotiv-forum.com"+thread.get('href'), driver))
-                            except:
-                                print("нет доступа к профилю: https://otomotiv-forum.com"+thread.get('href'))
-    close.driver()
+    for first_page in soup.find_all('a'):
+        if str(first_page.get('href'))[0:8] == "/members" and len(str(first_page.get('href'))) > 14 and str(first_page.get('href'))[9:11] != "li" and str(first_page.get('href'))[9:11] != "?k" and str(first_page.get('href')) != last_link:
+            not_to_check.append(str(first_page.get('href')))
+            try: # проверка на доступность профиля.
+                users.append(getUserData.getUserDataByUrl("https://otomotiv-forum.com"+first_page.get('href'), driver))
+            except:
+                print("нет доступа к профилю: https://otomotiv-forum.com"+first_page.get('href'))
+        last_link = str(first_page.get('href'))
     
-def getUserDataViaThreads():
-##    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install())) # подключаем драйвер
-    previous_users = []
-    users = []
-    newly_registered = []
-    
-    
-    page = requests.get("https://otomotiv-forum.com/members/list/")
-    src = page.text
-    soup = BeautifulSoup(src, 'lxml')
-    # выгрузка новых пользователей
-    for second_page in soup.find_all('a'):
-        for i in range(len(users)):
-            if users[i] == previous_users[i]:
-                newly_registered.append(users[i])
-    #"/members/list/?page=2"
-    for
-        if str(thread.get('href'))[0:8] == "/members" and len(str(thread.get('href'))) > 14 and str(thread.get('href')) != last_link:
-            users.append(str(thread.get('href')))
-        
-            
-##            try: # проверка на доступность профиля.
-##                print(getUserData.getUserDataByUrl("https://otomotiv-forum.com"+thread.get('href'), driver))
-##            except:
-##                print("нет доступа к профилю: https://otomotiv-forum.com"+thread.get('href'))
-##    
-##    close.driver()   
+    # выгрузка оставшихся юзеров
+    i = 2
+    while True:
+        page = requests.get("https://otomotiv-forum.com/members/list/", {"page": str(i)})
+        print("страница №"+str(i)) # дебаг инфа
+        src = page.text
+        soup = BeautifulSoup(src, 'lxml')
+        for UsersList in soup.find_all('a'):
+            if str(UsersList.get('href'))[0:8] == "/members" and len(str(UsersList.get('href'))) > 14 and str(UsersList.get('href'))[9:11] != "li" and str(UsersList.get('href'))[9:11] != "?k" and str(UsersList.get('href')) != last_link:
+                check = True
+                for j in range(len(not_to_check)): # проверка на нового пользователя
+                    if str(UsersList.get('href')) == not_to_check[j]:
+                        check = False
+                if check == True:
+                    try: # проверка на доступность профиля.
+                        users.append(getUserData.getUserDataByUrl("https://otomotiv-forum.com"+UsersList.get('href'), driver))
+                    except:
+                        print("нет доступа к профилю: https://otomotiv-forum.com"+UsersList.get('href'))
+            last_link = str(UsersList.get('href'))
+        i += 1
+
+    driver.close() # закрытие драйвера
+getUserDataViaThreads()
