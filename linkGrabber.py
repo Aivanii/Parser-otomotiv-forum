@@ -77,4 +77,3 @@ def getUserDataViaThreads():
         i += 1
 
     driver.close() # закрытие драйвера
-getUserDataViaThreads()
