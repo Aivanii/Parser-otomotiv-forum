@@ -47,7 +47,9 @@ def getUserDataViaThreads():
 
     last_link = ""
     for first_page in soup.find_all('a'):
-        if str(first_page.get('href'))[0:8] == "/members" and len(str(first_page.get('href'))) > 14 and str(first_page.get('href'))[9:11] != "li" and str(first_page.get('href'))[9:11] != "?k" and str(first_page.get('href')) != last_link:
+        if str(first_page.get('href'))[0:8] == "/members" and len(str(first_page.get('href'))) > 14 \
+                and str(first_page.get('href'))[9:11] != "li" and str(first_page.get('href'))[9:11] != "?k" \
+                and str(first_page.get('href')) != last_link:
             not_to_check.append(str(first_page.get('href')))
             try: # проверка на доступность профиля.
                 users.append(getUserData.getUserDataByUrl("https://otomotiv-forum.com"+first_page.get('href'), driver))
@@ -58,12 +60,15 @@ def getUserDataViaThreads():
     # выгрузка оставшихся юзеров
     i = 2
     while True:
+        print(users)
         page = requests.get("https://otomotiv-forum.com/members/list/", {"page": str(i)})
         print("страница №"+str(i)) # дебаг инфа
         src = page.text
         soup = BeautifulSoup(src, 'lxml')
         for UsersList in soup.find_all('a'):
-            if str(UsersList.get('href'))[0:8] == "/members" and len(str(UsersList.get('href'))) > 14 and str(UsersList.get('href'))[9:11] != "li" and str(UsersList.get('href'))[9:11] != "?k" and str(UsersList.get('href')) != last_link:
+            if str(UsersList.get('href'))[0:8] == "/members" and len(str(UsersList.get('href'))) > 14 \
+                    and str(UsersList.get('href'))[9:11] != "li" \
+                    and str(UsersList.get('href'))[9:11] != "?k" and str(UsersList.get('href')) != last_link:
                 check = True
                 for j in range(len(not_to_check)): # проверка на нового пользователя
                     if str(UsersList.get('href')) == not_to_check[j]:
@@ -71,9 +76,10 @@ def getUserDataViaThreads():
                 if check == True:
                     try: # проверка на доступность профиля.
                         users.append(getUserData.getUserDataByUrl("https://otomotiv-forum.com"+UsersList.get('href'), driver))
-                    except:
+                    except Exception as e:
+                        print(e)
                         print("нет доступа к профилю: https://otomotiv-forum.com"+UsersList.get('href'))
             last_link = str(UsersList.get('href'))
         i += 1
 
-    driver.close() # закрытие драйвера
+  #  driver.close() # закрытие драйвера

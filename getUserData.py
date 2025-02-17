@@ -1,3 +1,4 @@
+import requests
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.service import Service
@@ -6,6 +7,8 @@ from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
 from bs4 import BeautifulSoup
 import re
+import requests
+from pathlib import  Path
 
 def getUserDataByUrl(user_url, driver):
     # Navigating to the page
@@ -32,13 +35,21 @@ def getUserDataByUrl(user_url, driver):
     # Extracting username
     name = soup.find('span', class_='username--style5').text.strip() if soup.find('span', class_='username--style5') else None
 
-    # Extracting banner URL
-    banner_style = soup.find('div', class_='memberProfileBanner').get('style') if soup.find('div', class_='memberProfileBanner') else None
-    banner_url = banner_style.split('url(')[-1].split(')')[0].strip() if banner_style else None
-
     # Extracting profile image URL
     profile_image_tag = soup.find('img', class_='avatar-u122109-l')  # Change the class if it's different
     profile_image_url = "https://otomotiv-forum.com" + profile_image_tag['src'] if profile_image_tag and profile_image_tag['src'].startswith('/') else None
+   # print(profile_image_url)
+    profile_image_path = None
+    if profile_image_url is not None:
+        print('download test')
+        output_dir = Path("data")  # Папка для сохранения файлов
+        output_dir.mkdir(exist_ok=True)  # Создаем папку если ее нет
+        profile_image_path = f"{output_dir}/{name}_avatar.png"
+
+        with open(profile_image_path, "wb") as f:
+            f.write(requests.get(profile_image_url).content)
+
+
 
     # Extracting registration date
     registration_date = None
@@ -73,9 +84,9 @@ def getUserDataByUrl(user_url, driver):
     return({
         'ID': id,
         'Name': name,
-        'Banner_URL': banner_url,
+       # 'Banner_URL': banner_url,
         'User_URL': user_url,
-        'Profile_Image_URL': profile_image_url,
+        'Profile_Image_path': profile_image_path,
         'Registration_Date': registration_date,
         'Message_Count': message_count,
         'Reaction_Count': reaction_count,
