@@ -39,7 +39,7 @@ def getUserDataByUrl(user_url, driver):
     # Generate name
     characters = "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдеёжзийклмнопрстуфхцчшщъыьэюяABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789._"  # Возможные символы
     name = ''.join(random.choice(characters) for _ in range(random.randint(3, 12)))
-  
+
     # Extracting registration date
     registration_date = None
     registration_dd = soup.find('dt', string='Регистрация').find_next_sibling('dd')
