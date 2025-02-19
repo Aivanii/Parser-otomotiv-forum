@@ -52,7 +52,7 @@ def getUserDataViaThreads():
     while True:
         print(users)
         page = requests.get("https://otomotiv-forum.com/members/list/", {"page": str(i)})
-        print("страница №" + str(i))  # дебаг инфа
+        #print("страница №" + str(i))  # дебаг инфа
         src = page.text
         soup = BeautifulSoup(src, 'lxml')
         for UsersList in soup.find_all('a'):
@@ -70,7 +70,7 @@ def getUserDataViaThreads():
                         if int(data['Message_Count']) > 0:
                             users.append(data)
                     except Exception as e:
-                        print(e)
+                      #  print(e)
                         print("нет доступа к профилю: https://otomotiv-forum.com" + UsersList.get('href'))
             last_link = str(UsersList.get('href'))
         i += 1

@@ -10,7 +10,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 from bs4 import BeautifulSoup
 import re
 import requests
-from pathlib import  Path
+from pathlib import Path
 
 def getUserDataByUrl(user_url, driver):
     # Navigating to the page
