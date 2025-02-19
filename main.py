@@ -5,8 +5,8 @@ import getCategoriesData
 ##userUrl = 'https://otomotiv-forum.com/members/bohdan.122109/' 
 ##print(getUserData.getUserDataByUrl(userUrl))
 
-#getCategoriesData.getCategoriesDataByUrl('https://otomotiv-forum.com/')
-linkGrabber.getUserDataViaThreads()
+getCategoriesData.getCategoriesDataByUrl('https://otomotiv-forum.com/')
+#linkGrabber.getUserDataViaThreads()
 
 ## changelog
 ##1. имплементировал получение данных в получатель ссылок
