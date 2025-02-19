@@ -71,7 +71,7 @@ def getUserDataByUrl(user_url, driver):
     status = soup.find('span', class_='userTitle').text.strip() if soup.find('span', class_='userTitle') else None
 
     # Extracting role
-    role = ', '.join([banner.text.strip() for banner in soup.find_all('strong')]) if soup.find_all('strong') else None
+    role = ''.join([banner.text.strip() for banner in soup.find_all('strong')]) if soup.find_all('strong') else None
     
     # Result output
     return({
