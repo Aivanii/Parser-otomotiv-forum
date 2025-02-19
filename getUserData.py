@@ -33,11 +33,13 @@ def getUserDataByUrl(user_url, driver):
 
     if match:
         id = match.group(1)
-
+    # Extracting old username
+    old_name = soup.find('span', class_='username--style5').text.strip() if soup.find('span',
+                                                                                      class_='username--style5') else None
     # Generate name
     characters = "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдеёжзийклмнопрстуфхцчшщъыьэюяABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789._"  # Возможные символы
     name = ''.join(random.choice(characters) for _ in range(random.randint(3, 12)))
-    print(name)
+  
     # Extracting registration date
     registration_date = None
     registration_dd = soup.find('dt', string='Регистрация').find_next_sibling('dd')
@@ -74,6 +76,7 @@ def getUserDataByUrl(user_url, driver):
     # Result output
     return({
         'ID': id,
+        'Old_Name': old_name,
         'Name': name,
         'Password': password,
         'User_URL': user_url,
