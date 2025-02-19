@@ -1,3 +1,5 @@
+import random
+
 import requests
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -32,25 +34,10 @@ def getUserDataByUrl(user_url, driver):
     if match:
         id = match.group(1)
 
-    # Extracting username
-    name = soup.find('span', class_='username--style5').text.strip() if soup.find('span', class_='username--style5') else None
-
-    # Extracting profile image URL
-    profile_image_tag = soup.find('img', class_='avatar-u122109-l')  # Change the class if it's different
-    profile_image_url = "https://otomotiv-forum.com" + profile_image_tag['src'] if profile_image_tag and profile_image_tag['src'].startswith('/') else None
-   # print(profile_image_url)
-    profile_image_path = None
-    if profile_image_url is not None:
-        print('download test')
-        output_dir = Path("data")  # Папка для сохранения файлов
-        output_dir.mkdir(exist_ok=True)  # Создаем папку если ее нет
-        profile_image_path = f"{output_dir}/{name}_avatar.png"
-
-        with open(profile_image_path, "wb") as f:
-            f.write(requests.get(profile_image_url).content)
-
-
-
+    # Generate name
+    characters = "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдеёжзийклмнопрстуфхцчшщъыьэюяABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789._"  # Возможные символы
+    name = ''.join(random.choice(characters) for _ in range(random.randint(3, 12)))
+    print(name)
     # Extracting registration date
     registration_date = None
     registration_dd = soup.find('dt', string='Регистрация').find_next_sibling('dd')
@@ -61,6 +48,10 @@ def getUserDataByUrl(user_url, driver):
     # Extracting message count
     message_count = soup.find('dl', class_='pairs pairs--rows pairs--rows--centered fauxBlockLink').find('dd').text.strip() if soup.find('dl', class_='pairs pairs--rows pairs--rows--centered fauxBlockLink') else None
 
+    # Generate password
+    password = ''
+    for i in range(random.randint(5, 6)):
+        password+= chr(random.randint(33, 125))
     # Extracting reaction count
     reaction_count = None
     reaction_dd = soup.find('dt', string='Реакции').find_next_sibling('dd')
@@ -84,9 +75,8 @@ def getUserDataByUrl(user_url, driver):
     return({
         'ID': id,
         'Name': name,
-       # 'Banner_URL': banner_url,
+        'Password': password,
         'User_URL': user_url,
-        'Profile_Image_path': profile_image_path,
         'Registration_Date': registration_date,
         'Message_Count': message_count,
         'Reaction_Count': reaction_count,
