@@ -1,11 +1,14 @@
 import getUserData
 import linkGrabber
 import getCategoriesData
+import getMessagesData
 # Profile page URL
 ##userUrl = 'https://otomotiv-forum.com/members/bohdan.122109/' 
 ##print(getUserData.getUserDataByUrl(userUrl))
 
-getCategoriesData.getCategoriesDataByUrl('https://otomotiv-forum.com/')
+getMessagesData.getAllMessage('https://otomotiv-forum.com/threads/sajt-ne-gruzitsja.42496/')
+
+#getCategoriesData.getCategoriesDataByUrl('https://otomotiv-forum.com/')
 #linkGrabber.getUserDataViaThreads()
 
 ## changelog
