@@ -53,6 +53,6 @@ def getCategoriesDataByUrl(url):
             'Sub_forum_count': sub_forum_count,
             'Sub_forum_id_list': sub_forums_id
         })
-    print(categories)
+
     return categories
     # print(soup.findAll(class_=category))
