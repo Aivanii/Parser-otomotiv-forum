@@ -30,9 +30,10 @@ def getAllMessage(url):
     messages_containers = soup.find(class_='block-body js-replyNewMessageContainer').find_all('article')
     message_id_list = re.findall(r'post-\w*', str(messages_containers))
     print(message_id_list)
-    for i in messages_containers:
-
-        print(i['id'])
+    for i in message_id_list:
+        id = re.findall(r'\d\d\d\d\d\d', i)[0]
+        print(id, 'id')
+        print(soup.find(id = f"js-post-{id}").find( class_='message-userContent lbContainer js-lbContainer ').find(class_="bbWrapper") )
     #id_list = messages_containers.find_all('id')
 
     print(str(messages_containers))
