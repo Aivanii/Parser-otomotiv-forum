@@ -27,13 +27,38 @@ def getAllMessage(url):
 
     # Analyzing the page with BeautifulSoup
     soup = BeautifulSoup(page_source, 'html.parser')
-    messages_containers = soup.find(class_='block-body js-replyNewMessageContainer').find_all('article')
-    message_id_list = re.findall(r'post-\w*', str(messages_containers))
-    print(message_id_list)
-    for i in message_id_list:
-        id = re.findall(r'\d\d\d\d\d\d', i)[0]
-        print(id, 'id')
-        print(soup.find(id = f"js-post-{id}").find( class_='message-userContent lbContainer js-lbContainer ').find(class_="bbWrapper") )
-    #id_list = messages_containers.find_all('id')
 
-    print(str(messages_containers))
+    messages_containers = soup.find(class_='block-body js-replyNewMessageContainer').find_all('article')
+    message_id_list =set( re.findall(r'post-\d+', str(messages_containers)))
+    print(message_id_list)
+
+
+    for i in message_id_list:
+        id_num = re.findall(r'\d+', i)[0]
+        print(id_num, 'id')
+
+        messages_info = soup.find_all(id=f"js-post-{id_num}")
+
+        #print(message_info)
+        for i in messages_info:
+           # print(i)
+
+            test = i.find(class_="bbWrapper").find(recursive=False,text=True)
+            print(test)
+            for j in i.find_all('br'):
+                print(j.nextSibling.strip())
+           # print(i.contents)
+    #id_list = messages_containers.find_all('id')
+    """{
+        path_avatar,
+        path_files,
+        urls,
+        date,
+        text,
+        id,
+        react\like,
+        user_id
+        
+    }"""
+
+    #print(str(messages_containers))
