@@ -12,10 +12,10 @@ import dbUtils
 
 dbUtils.createUserDb()
 
-getMessagesData.getAllMessage('https://otomotiv-forum.com/threads/pomosch-s-registraciej-na-mhh-auto.30392/')
+#getMessagesData.getAllMessage('https://otomotiv-forum.com/threads/pomosch-s-registraciej-na-mhh-auto.30392/')
 
 driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()),
                           options=Options().add_argument("--disable-blink-features=AutomationControlled"))
-test = getUserData.getUserDataByUrl('https://otomotiv-forum.com/members/drunk-wizards.137127/', driver)
+test = getUserData.getUserDataByUrl('https://otomotiv-forum.com/members/dimitrov.137127/', driver)
 print(test)
 dbUtils.insertUser(test)
