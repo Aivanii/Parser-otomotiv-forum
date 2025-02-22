@@ -6,7 +6,7 @@ import getMessagesData
 ##userUrl = 'https://otomotiv-forum.com/members/bohdan.122109/' 
 ##print(getUserData.getUserDataByUrl(userUrl))
 
-getMessagesData.getAllMessage('https://otomotiv-forum.com/threads/sajt-ne-gruzitsja.42496/')
+getMessagesData.getAllMessage('https://otomotiv-forum.com/threads/pomosch-s-registraciej-na-mhh-auto.30392/')
 
 #getCategoriesData.getCategoriesDataByUrl('https://otomotiv-forum.com/')
 #linkGrabber.getUserDataViaThreads()
