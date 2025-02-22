@@ -12,8 +12,6 @@ import dbUtils
 
 dbUtils.createUserDb()
 
-#====> `dbUtils.insertUser(user_data)`
-
 getMessagesData.getAllMessage('https://otomotiv-forum.com/threads/pomosch-s-registraciej-na-mhh-auto.30392/')
 
 driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()),
