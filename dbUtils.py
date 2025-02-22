@@ -56,5 +56,6 @@ def insertUser(user_data):
     conn.close()
 
     print("Пользователь успешно добавлен!")
+    print(user_data)
 
 
