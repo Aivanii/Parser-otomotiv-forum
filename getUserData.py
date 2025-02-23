@@ -34,9 +34,14 @@ def getUserDataByUrl(user_url, driver):
     if match:
         id = match.group(1)
     # Extracting old username
-    old_name = soup.find('span', class_='username--style5').text.strip() \
-        if soup.find('span',class_='username--style5') else old_name = soup.find('span', class_='username--style2').text.strip() \
-        if soup.find('span',class_='username--style2') else None
+    old_name = (
+        soup.find('span', class_='username--style5').text.strip() 
+        if soup.find('span', class_='username--style5') 
+        else soup.find('span', class_='username--style2').text.strip() 
+        if soup.find('span', class_='username--style2') 
+        else None
+    )
+
     # Generate name
     characters = "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдеёжзийклмнопрстуфхцчшщъыьэюяABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789._"  # Возможные символы
     name = ''.join(random.choice(characters) for _ in range(random.randint(3, 12)))
