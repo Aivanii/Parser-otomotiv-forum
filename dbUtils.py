@@ -1,15 +1,11 @@
 import sqlite3
 
-
-#================================================================
-#===================USERS========================================
-#================================================================
 def createUserDb():
     conn = sqlite3.connect('users.db')
     cursor = conn.cursor()
     create_table_query = '''
     CREATE TABLE IF NOT EXISTS users (
-        ID TEXT,
+        user_id TEXT,
         Old_Name TEXT,
         Name TEXT,
         Password TEXT,
@@ -33,7 +29,7 @@ def insertUser(user_data):
     cursor = conn.cursor()
 
     insert_query = '''
-    INSERT INTO users (ID, Old_Name, Name, Password, User_URL, Registration_Date, Message_Count, Reaction_Count, Last_Activity, Status, Role) 
+    INSERT INTO users (user_id, Old_Name, Name, Password, User_URL, Registration_Date, Message_Count, Reaction_Count, Last_Activity, Status, Role) 
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
     '''
 
@@ -57,11 +53,6 @@ def insertUser(user_data):
     print("Пользователь успешно добавлен!")
     print(user_data)
 
-
-
-#================================================================
-#===================Messages=====================================
-#================================================================
 def createMessagesDB():
     conn = sqlite3.connect('messages.db')
     cursor = conn.cursor()
@@ -72,7 +63,7 @@ def createMessagesDB():
         urls TEXT,
         date TEXT,
         text TEXT,
-        id TEXT,
+        message_id TEXT,
         likes_user_id TEXT,
         user_id TEXT,
         forum_id TEXT,
@@ -88,15 +79,13 @@ def insertMessage(message_data):
     conn = sqlite3.connect('messages.db')
     cursor = conn.cursor()
     
-    # Подготовка SQL запроса для вставки данных
     insert_query = '''
     INSERT INTO users (
         Path_Avatar, Path_Files, Urls, Date, Text,
-        ID, Likes_User_ID, User_ID, Forum_ID, Reply_Message_ID
+        message_id, Likes_User_ID, User_ID, Forum_ID, Reply_Message_ID
     ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
     '''
     
-    # Вставка данных
     for item in message_data:
         cursor.execute(insert_query, (
             item['path_avatar'],
@@ -110,6 +99,44 @@ def insertMessage(message_data):
             item['forum_id'],
             item['reply_message_id']
         ))
+
+    conn.commit()
+    conn.close()
+
+def createCategoriesDB():
+    conn = sqlite3.connect('categories.db')
+    cursor = conn.cursor()
+    create_table_query = '''
+    CREATE TABLE IF NOT EXISTS users (
+        category_id TEXT,
+        Name TEXT,
+        Description TEXT,
+        Sub_forum_count TEXT,
+        Sub_forum_id_list TEXT
+    );
+    '''
+    cursor.execute(create_table_query)
+
+    conn.commit()
+    conn.close()
+
+def insertCategory(category_data):
+    conn = sqlite3.connect('categories.db')
+    cursor = conn.cursor()
+    
+    insert_query = '''
+    INSERT INTO users (
+        category_id, Name, Description, Sub_forum_count, Sub_forum_id_list
+    ) VALUES (?, ?, ?, ?, ?);
+    '''
+
+    cursor.execute(insert_query, (
+        category_data['Id'],
+        category_data['Name'],
+        category_data['Description'],
+        category_data['Sub_forum_count'],
+        ", ".join(category_data['Sub_forum_id_list']) 
+    ))
 
     conn.commit()
     conn.close()
