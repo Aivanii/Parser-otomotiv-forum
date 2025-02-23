@@ -9,24 +9,23 @@ from webdriver_manager.chrome import ChromeDriverManager
 import re
 from selenium.webdriver.chrome.options import Options
 
-
 def getCategoriesDataByUrl(url):
-    # массив для категорий
+    # Массив для категорий
     categories = []
     # Navigating to the page
     driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()),
                               options=Options().add_argument("--disable-blink-features=AutomationControlled"))
     driver.get(url)
 
-    # Ждем когда нужный нам элемент загрузится
+    # Ждем, когда нужный нам элемент загрузится
     WebDriverWait(driver, 30).until(
         EC.presence_of_element_located((By.CSS_SELECTOR, 'body[data-template="forum_list"]'))
     )
 
-    # Getting the page source
+    # Получаем исходный код страницы
     page_source = driver.page_source
 
-    # Analyzing the page with BeautifulSoup
+    # Анализируем страницу с помощью BeautifulSoup
     soup = BeautifulSoup(page_source, 'html.parser')
 
     categories_containers = re.findall(r'block block--category block--category\w* collapsible-nodes',
@@ -35,24 +34,28 @@ def getCategoriesDataByUrl(url):
     for category in categories_containers:
         description = soup.find(class_=category).find(class_='block-desc').text \
             if soup.find(class_=category).find(class_='block-desc') else None
-        name = soup.find(class_=category).find('a')
+        
+        name_tag = soup.find(class_=category).find('a')
+        name = name_tag.text if name_tag else None  # Извлекаем текст из тега <a>
+        
         id = re.findall(r'\d\d\d|\d\d|\d', category)[0]
 
-        # чтение данных о саб формуах
+        # Чтение данных о саб-форумах
         sub_forums_containers = re.findall(r'node node--id\w*',
                                        str(soup.find(class_=category).find(class_='block-container')))
         sub_forum_count = len(sub_forums_containers)
-        sub_forums_id =''
+        sub_forums_id = ''
         for sub_forum in sub_forums_containers:
             sub_forums_id += re.findall(r'\d\d\d|\d\d|\d', sub_forum)[0]
             sub_forums_id += '|'
+        
         categories.append({
             'Id': id,
-            'Name': name,
+            'Name': name,  # Теперь здесь строка, а не Tag
             'Description': description,
             'Sub_forum_count': sub_forum_count,
             'Sub_forum_id_list': sub_forums_id
         })
 
+    driver.quit()  # Закрываем драйвер после завершения
     return categories
-    # print(soup.findAll(class_=category))

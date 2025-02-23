@@ -111,7 +111,7 @@ def createCategoriesDB():
         category_id TEXT,
         Name TEXT,
         Description TEXT,
-        Sub_forum_count TEXT,
+        Sub_forum_count INTEGER,
         Sub_forum_id_list TEXT
     );
     '''
@@ -120,7 +120,7 @@ def createCategoriesDB():
     conn.commit()
     conn.close()
 
-def insertCategory(category_data):
+def insertCategories(categories_data):
     conn = sqlite3.connect('categories.db')
     cursor = conn.cursor()
     
@@ -130,13 +130,14 @@ def insertCategory(category_data):
     ) VALUES (?, ?, ?, ?, ?);
     '''
 
-    cursor.execute(insert_query, (
-        category_data['Id'],
-        category_data['Name'],
-        category_data['Description'],
-        category_data['Sub_forum_count'],
-        ", ".join(category_data['Sub_forum_id_list']) 
-    ))
+    for category_data in categories_data:
+        cursor.execute(insert_query, (
+            category_data['Id'],
+            category_data['Name'],
+            category_data['Description'],
+            category_data['Sub_forum_count'],
+            category_data['Sub_forum_id_list']
+        ))
 
     conn.commit()
     conn.close()

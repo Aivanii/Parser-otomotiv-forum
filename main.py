@@ -10,8 +10,10 @@ import dbUtils
 
 #dbUtils.createUserDb()
 #dbUtils.createMessagesDB()
-#dbUtils.createCategoriesDB()
-
+dbUtils.createCategoriesDB()
+categories_data = getCategoriesData.getCategoriesDataByUrl("https://otomotiv-forum.com/")
+print(categories_data)
+dbUtils.insertCategories(categories_data)
 
 
 
