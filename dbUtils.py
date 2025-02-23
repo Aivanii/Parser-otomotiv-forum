@@ -62,7 +62,7 @@ def insertUser(user_data):
 #================================================================
 #===================Messages=====================================
 #================================================================
-def createMessageDB():
+def createMessagesDB():
     conn = sqlite3.connect('messages.db')
     cursor = conn.cursor()
     create_table_query = '''

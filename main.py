@@ -10,7 +10,7 @@ import dbUtils
 
 
 dbUtils.createUserDb()
-dbUtils.createMessageDB()
+dbUtils.createMessagesDB()
 
 #getMessagesData.getAllMessage('https://otomotiv-forum.com/threads/pomosch-s-registraciej-na-mhh-auto.30392/')
 
