@@ -67,16 +67,16 @@ def createMessagesDB():
     cursor = conn.cursor()
     create_table_query = '''
     CREATE TABLE IF NOT EXISTS users (
-        Path_Avatar TEXT,
-        Path_Files TEXT,
-        Urls TEXT,
-        Date TEXT,
-        Text TEXT,
-        ID TEXT,
-        Likes_User_ID TEXT,
-        User_ID TEXT,
-        Forum_ID TEXT,
-        Reply_Message_ID TEXT
+        path_avatar TEXT,
+        path_files TEXT,
+        urls TEXT,
+        date TEXT,
+        text TEXT,
+        id TEXT,
+        likes_user_id TEXT,
+        user_id TEXT,
+        forum_id TEXT,
+        reply_message_id TEXT
     );
     '''
     cursor.execute(create_table_query)
@@ -99,16 +99,16 @@ def insertMessage(message_data):
     # Вставка данных
     for item in message_data:
         cursor.execute(insert_query, (
-            item['Path_Avatar'],
-            item['Path_Files'],
-            item['Urls'],
-            item['Date'],
-            item['Text'],
-            item['ID'],
-            item['Likes_User_ID'],
-            item['User  _ID'],
-            item['Forum_ID'],
-            item['Reply_Message_ID']
+            item['path_avatar'],
+            item['path_files'],
+            item['urls'],
+            item['date'],
+            item['text'],
+            item['id'],
+            item['likes_user_id'],
+            item['user_id'],
+            item['forum_id'],
+            item['reply_message_id']
         ))
 
     conn.commit()
