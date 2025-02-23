@@ -4,7 +4,6 @@ import sqlite3
 #================================================================
 #===================USERS========================================
 #================================================================
-#проверяем, есть ли бд юзеров и создаём её по необходимости
 def createUserDb():
     conn = sqlite3.connect('users.db')
     cursor = conn.cursor()
@@ -81,6 +80,36 @@ def createMessageDB():
     );
     '''
     cursor.execute(create_table_query)
+
+    conn.commit()
+    conn.close()
+
+def insertMessage(message_data):
+    conn = sqlite3.connect('messages.db')
+    cursor = conn.cursor()
+    
+    # Подготовка SQL запроса для вставки данных
+    insert_query = '''
+    INSERT INTO users (
+        Path_Avatar, Path_Files, Urls, Date, Text,
+        ID, Likes_User_ID, User_ID, Forum_ID, Reply_Message_ID
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+    '''
+    
+    # Вставка данных
+    for item in message_data:
+        cursor.execute(insert_query, (
+            item['Path_Avatar'],
+            item['Path_Files'],
+            item['Urls'],
+            item['Date'],
+            item['Text'],
+            item['ID'],
+            item['Likes_User_ID'],
+            item['User  _ID'],
+            item['Forum_ID'],
+            item['Reply_Message_ID']
+        ))
 
     conn.commit()
     conn.close()
