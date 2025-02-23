@@ -61,17 +61,17 @@ def getAllMessage(url):
             user_id = message_info.find('a')['data-user-id']
 
             # получение ссылок из сообщения
-            message_urls = message_info.find(class_='bbWrapper').find_all(
+            message_Urls = message_info.find(class_='bbWrapper').find_all(
                 class_="link link--external fauxBlockLink-blockLink")
-            urls = []
-            if message_urls is not []: # првоеряем наличие ссылок
-                for url in message_urls:  # перебираем все ссылки из сообщения и форматируем их
+            Urls = []
+            if message_Urls is not []: # првоеряем наличие ссылок
+                for url in message_Urls:  # перебираем все ссылки из сообщения и форматируем их
                     if 'youtube.com' in url['href']:
                         continue
                     url = url['href'].replace('https://otomotiv-forum.com/', 'https://avtooblako.ru/')
-                    urls.append(url)
+                    Urls.append(url)
             else:
-                urls = None
+                Urls = None
 
             # получаем id сообщение на которое сделан овтет
             raw_reply_message_id = message_info.find('blockquote')['data-source'] if message_info.find('blockquote') else None
@@ -96,7 +96,7 @@ def getAllMessage(url):
             message['date'] = date
             message["text"] = text
             message['user_id'] = user_id
-            message['urls'] = urls
+            message['Urls'] = Urls
             message['forum_id'] = forum_id
             message['reply_message_id'] = replay_message_id
             message['likes_user_id'] = likes_user_id

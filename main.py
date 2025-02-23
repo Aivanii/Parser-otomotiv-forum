@@ -8,12 +8,16 @@ import getCategoriesData
 import getMessagesData
 import dbUtils
 
+#dbUtils.createUserDb()
+#dbUtils.createMessagesDB()
+dbUtils.createCategoriesDB()
+categories_data = getCategoriesData.getCategoriesDataByUrl("https://otomotiv-forum.com/")
+print(categories_data)
+dbUtils.insertCategories(categories_data)
 
-dbUtils.createUserDb()
-dbUtils.createMessageDB()
+
 
 #getMessagesData.getAllMessage('https://otomotiv-forum.com/threads/pomosch-s-registraciej-na-mhh-auto.30392/')
-
 #driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()),
 #                          options=Options().add_argument("--disable-blink-features=AutomationControlled"))
 #test = getUserData.getUserDataByUrl('https://otomotiv-forum.com/members/dimitrov.137127/', driver)
