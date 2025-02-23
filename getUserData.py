@@ -1,3 +1,6 @@
+import random
+
+import requests
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.service import Service
@@ -6,6 +9,8 @@ from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
 from bs4 import BeautifulSoup
 import re
+import requests
+from pathlib import Path
 
 def getUserDataByUrl(user_url, driver):
     # Navigating to the page
@@ -28,17 +33,18 @@ def getUserDataByUrl(user_url, driver):
 
     if match:
         id = match.group(1)
+    # Extracting old username
+    old_name = (
+        soup.find('span', class_='username--style5').text.strip() 
+        if soup.find('span', class_='username--style5') 
+        else soup.find('span', class_='username--style2').text.strip() 
+        if soup.find('span', class_='username--style2') 
+        else None
+    )
 
-    # Extracting username
-    name = soup.find('span', class_='username--style5').text.strip() if soup.find('span', class_='username--style5') else None
-
-    # Extracting banner URL
-    banner_style = soup.find('div', class_='memberProfileBanner').get('style') if soup.find('div', class_='memberProfileBanner') else None
-    banner_url = banner_style.split('url(')[-1].split(')')[0].strip() if banner_style else None
-
-    # Extracting profile image URL
-    profile_image_tag = soup.find('img', class_='avatar-u122109-l')  # Change the class if it's different
-    profile_image_url = "https://otomotiv-forum.com" + profile_image_tag['src'] if profile_image_tag and profile_image_tag['src'].startswith('/') else None
+    # Generate name
+    characters = "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдеёжзийклмнопрстуфхцчшщъыьэюяABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789._"  # Возможные символы
+    name = ''.join(random.choice(characters) for _ in range(random.randint(3, 12)))
 
     # Extracting registration date
     registration_date = None
@@ -50,6 +56,10 @@ def getUserDataByUrl(user_url, driver):
     # Extracting message count
     message_count = soup.find('dl', class_='pairs pairs--rows pairs--rows--centered fauxBlockLink').find('dd').text.strip() if soup.find('dl', class_='pairs pairs--rows pairs--rows--centered fauxBlockLink') else None
 
+    # Generate password
+    password = ''
+    for i in range(random.randint(5, 6)):
+        password+= chr(random.randint(33, 125))
     # Extracting reaction count
     reaction_count = None
     reaction_dd = soup.find('dt', string='Реакции').find_next_sibling('dd')
@@ -67,15 +77,15 @@ def getUserDataByUrl(user_url, driver):
     status = soup.find('span', class_='userTitle').text.strip() if soup.find('span', class_='userTitle') else None
 
     # Extracting role
-    role = ', '.join([banner.text.strip() for banner in soup.find_all('strong')]) if soup.find_all('strong') else None
+    role = ''.join([banner.text.strip() for banner in soup.find_all('strong')]) if soup.find_all('strong') else None
     
     # Result output
     return({
         'ID': id,
+        'Old_Name': old_name,
         'Name': name,
-        'Banner_URL': banner_url,
+        'Password': password,
         'User_URL': user_url,
-        'Profile_Image_URL': profile_image_url,
         'Registration_Date': registration_date,
         'Message_Count': message_count,
         'Reaction_Count': reaction_count,

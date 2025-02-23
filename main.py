@@ -1,14 +1,21 @@
-import getUserData
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.chrome.options import Options
+from webdriver_manager.chrome import ChromeDriverManager
+import getUserData 
 import linkGrabber
+import getCategoriesData
+import getMessagesData
+import dbUtils
 
-# Profile page URL
-##userUrl = 'https://otomotiv-forum.com/members/bohdan.122109/' 
-##print(getUserData.getUserDataByUrl(userUrl))
-linkGrabber.getUserDataViaThreads()
 
-## changelog
-##1. имплементировал получение данных в получатель ссылок
-##2. вынес подключение драйвера за фукнцию получения данных
-##3. добавил проверку на доступность страницы пользователя
-##4. начал делать выгрузку пользователей из общего реестра
+dbUtils.createUserDb()
+dbUtils.createMessageDB()
 
+#getMessagesData.getAllMessage('https://otomotiv-forum.com/threads/pomosch-s-registraciej-na-mhh-auto.30392/')
+
+#driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()),
+#                          options=Options().add_argument("--disable-blink-features=AutomationControlled"))
+#test = getUserData.getUserDataByUrl('https://otomotiv-forum.com/members/dimitrov.137127/', driver)
+#print(test)
+#dbUtils.insertUser(test)
