@@ -59,3 +59,28 @@ def insertUser(user_data):
     print(user_data)
 
 
+
+#================================================================
+#===================Messages=====================================
+#================================================================
+def createMessageDB():
+    conn = sqlite3.connect('messages.db')
+    cursor = conn.cursor()
+    create_table_query = '''
+    CREATE TABLE IF NOT EXISTS users (
+        Path_Avatar TEXT,
+        Path_Files TEXT,
+        Urls TEXT,
+        Date TEXT,
+        Text TEXT,
+        ID TEXT,
+        Likes_User_ID TEXT,
+        User_ID TEXT,
+        Forum_ID TEXT,
+        Reply_Message_ID TEXT
+    );
+    '''
+    cursor.execute(create_table_query)
+
+    conn.commit()
+    conn.close()
