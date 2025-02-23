@@ -7,7 +7,8 @@ from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 import re
 from selenium.webdriver.chrome.options import Options
-
+import requests
+from pathlib import  Path
 
 # принмиает url на тему, а возвращает список со словорями 1 словарь -1 сообщение
 def getAllMessage(url):
@@ -39,7 +40,7 @@ def getAllMessage(url):
     print(forum_id)
 
     for id in message_id_list:
-        id_num = re.findall(r'\d+', id)[0] # численная часть id
+        id_num = re.findall(r'\d+', id)[0] # численная часть id сообщения
         message = {} # словарь с инфой о сообщении
 
         # собираем все теги кроме дочерних, где содержится информация о сообщениях
@@ -51,7 +52,10 @@ def getAllMessage(url):
         for message_info in messages_info: # пробегаемся по тегам содержащим ифнормацию о сообщении
 
             # получаем текст сообщения, без учета "овета"
-            text = message_info.find('blockquote').nextSibling.strip() if message_info.find('blockquote') \
+            text = message_info.find('blockquote').nextSibling.strip() \
+                if message_info.find('blockquote') \
+                else message_info.find(class_="bbWrapper").find(class_="username--style5").parent.nextSibling.strip()\
+                if message_info.find(class_="bbWrapper").find(class_="username--style5") \
                 else message_info.find(class_="bbWrapper").text
 
             # получаем дату отправки сообщения
@@ -92,6 +96,38 @@ def getAllMessage(url):
                 likes_user_id += user_reacted_info.find('a')['data-user-id']
                 likes_user_id += '|'
 
+            # получаем id человека который упомянут в сообщении, если такой есть
+            user_mention_id = message_info.find(class_="bbWrapper").find(class_="username--style5").parent['data-user-id']\
+                if message_info.find(class_="bbWrapper").find(class_="username--style5") else None
+
+            # локально сохраняем вложенные в сообщение файлы
+            files_info = message_info.find_all(class_='file file--linked')\
+                if message_info.find_all(class_='file file--linked')  else None
+            file_paths = ''
+            if files_info is not None:
+                for file_info in files_info:
+                    url = file_info.find("a", class_=lambda x: x and "file-preview" in x.split())
+                    file_url =   f'https://otomotiv-forum.com{url["href"]}'
+                    file_name = file_info.find(class_='file-name')['title']
+
+                    output_dir = Path("data")  # Папка для сохранения файлов
+                    output_dir.mkdir(exist_ok=True)  # Создаем папку если ее нет
+
+                    filepath = f"{output_dir}/{file_name}"
+                    def get_cookies_dict(driver):
+                            """Преобразует cookies Selenium в словарь для requests."""
+                            cookies = driver.get_cookies()
+                            cookies_dict = {}
+                            for cookie in cookies:
+                                cookies_dict[cookie['name']] = cookie['value']
+                            return cookies_dict
+                    req = requests.get(file_url, cookies= get_cookies_dict(driver))
+                    #print(req.content)
+                    with open(filepath, "wb") as f:
+                                f.write(req.content)
+                    file_paths+=filepath
+                    file_paths+='|'
+
             # сохраняем  данные в словарь
             message['date'] = date
             message["text"] = text
@@ -100,12 +136,13 @@ def getAllMessage(url):
             message['forum_id'] = forum_id
             message['reply_message_id'] = replay_message_id
             message['likes_user_id'] = likes_user_id
+            message['user_mention_id'] = user_mention_id
+            message['path_files'] = file_paths
 
         messages.append(message)
     print(messages)
     # id_list = messages_containers.find_all('id')
     """{
-        path_avatar,
         path_files,
         urls,
         date,
@@ -114,7 +151,8 @@ def getAllMessage(url):
         likes_user_id,
         user_id,
         forum_id,
-        reply_message_id
+        reply_message_id,
+        user_mention_id,
         
     }"""
 

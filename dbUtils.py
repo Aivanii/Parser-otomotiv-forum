@@ -58,7 +58,6 @@ def createMessagesDB():
     cursor = conn.cursor()
     create_table_query = '''
     CREATE TABLE IF NOT EXISTS users (
-        path_avatar TEXT,
         path_files TEXT,
         urls TEXT,
         date TEXT,
@@ -81,14 +80,13 @@ def insertMessage(message_data):
     
     insert_query = '''
     INSERT INTO users (
-        Path_Avatar, Path_Files, Urls, Date, Text,
+        Path_Files, Urls, Date, Text,
         message_id, Likes_User_ID, User_ID, Forum_ID, Reply_Message_ID
     ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
     '''
     
     for item in message_data:
         cursor.execute(insert_query, (
-            item['path_avatar'],
             item['path_files'],
             item['urls'],
             item['date'],
