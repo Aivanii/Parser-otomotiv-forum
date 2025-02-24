@@ -56,6 +56,6 @@ def getCategoriesDataByUrl(url):
             'Sub_forum_count': sub_forum_count,
             'Sub_forum_id_list': sub_forums_id
         })
-
+    print(categories)
     driver.quit()  # Закрываем драйвер после завершения
     return categories
