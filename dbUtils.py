@@ -58,7 +58,6 @@ def createMessagesDB():
     cursor = conn.cursor()
     create_table_query = '''
     CREATE TABLE IF NOT EXISTS users (
-        path_avatar TEXT,
         path_files TEXT,
         urls TEXT,
         date TEXT,
@@ -67,7 +66,8 @@ def createMessagesDB():
         likes_user_id TEXT,
         user_id TEXT,
         forum_id TEXT,
-        reply_message_id TEXT
+        reply_message_id TEXT,
+        user_mention_id TEXT,
     );
     '''
     cursor.execute(create_table_query)
@@ -81,14 +81,14 @@ def insertMessage(message_data):
     
     insert_query = '''
     INSERT INTO users (
-        Path_Avatar, Path_Files, Urls, Date, Text,
-        message_id, Likes_User_ID, User_ID, Forum_ID, Reply_Message_ID
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+        Path_Files, Urls, Date, Text,
+        message_id, Likes_User_ID, User_ID, Forum_ID, Reply_Message_ID,
+        user_mention_id
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
     '''
     
     for item in message_data:
         cursor.execute(insert_query, (
-            item['path_avatar'],
             item['path_files'],
             item['urls'],
             item['date'],
@@ -97,7 +97,8 @@ def insertMessage(message_data):
             item['likes_user_id'],
             item['user_id'],
             item['forum_id'],
-            item['reply_message_id']
+            item['reply_message_id'],
+            item['user_mention_id']
         ))
 
     conn.commit()
