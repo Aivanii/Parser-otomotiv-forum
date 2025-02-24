@@ -57,7 +57,7 @@ def getForumsDataById(id):
         forum['message_count'] = message_count
 
         forums.append(forum)
-    print(forums)
+
     return forums
 
 

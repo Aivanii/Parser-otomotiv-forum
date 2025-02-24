@@ -3,6 +3,7 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
 
+import getForumInfo
 import getForums
 import getUserData 
 import linkGrabber
@@ -20,7 +21,9 @@ import dbUtils
 
 #getMessagesData.getAllMessage('https://otomotiv-forum.com/threads/volvo-xc60-2-4-dizel-2012g-akpp-pcm.43823/')
 #getCategoriesData.getCategoriesDataByUrl('https://otomotiv-forum.com/')
-getForums.getForumsDataById(29)
+#getForums.getForumsDataById(29)
+getForumInfo.getForumsDataById(209)
+
 #getMessagesData.getAllMessage('https://otomotiv-forum.com/threads/pomosch-s-registraciej-na-mhh-auto.30392/')
 # driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()),
 #                           options=Options().add_argument("--disable-blink-features=AutomationControlled"))
