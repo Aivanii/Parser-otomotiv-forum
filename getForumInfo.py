@@ -68,7 +68,7 @@ def getForumsDataById(forum_id):
             # записываем полученные данные
             theme["name"] = name
             theme["theme_id"] = theme_id
-            theme["parent_forum_id"] = forum_id
+            theme["parent_forum_id"] = str(forum_id)
             theme["creator_id"] = creator_id
             theme["create_date"] = create_date
             theme['views']= views
