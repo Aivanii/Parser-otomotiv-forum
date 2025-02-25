@@ -14,7 +14,8 @@ import dbUtils
 
 #dbUtils.createUserDb()
 #dbUtils.createMessagesDB()
-# dbUtils.createCategoriesDB()
+#dbUtils.createCategoriesDB()
+#dbUtils.createTopicsDB()
 # categories_data = getCategoriesData.getCategoriesDataByUrl("https://otomotiv-forum.com/")
 # print(categories_data)
 #dbUtils.insertCategories(categories_data)
@@ -22,7 +23,7 @@ import dbUtils
 #getMessagesData.getAllMessage('https://otomotiv-forum.com/threads/volvo-xc60-2-4-dizel-2012g-akpp-pcm.43823/')
 #getCategoriesData.getCategoriesDataByUrl('https://otomotiv-forum.com/')
 #getForums.getForumsDataById(29)
-getForumInfo.getForumsDataById(116)
+#getForumInfo.getForumsDataById(116)
 
 #getMessagesData.getAllMessage('https://otomotiv-forum.com/threads/pomosch-s-registraciej-na-mhh-auto.30392/')
 # driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()),

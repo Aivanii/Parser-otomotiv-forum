@@ -142,3 +142,47 @@ def insertCategories(categories_data):
 
     conn.commit()
     conn.close()
+
+def createTopicsDB():
+    conn = sqlite3.connect('topics.db')
+    cursor = conn.cursor()
+    create_table_query = '''
+    CREATE TABLE IF NOT EXISTS users (
+        id INTEGER PRIMARY KEY,
+        name TEXT,
+        theme_id TEXT,
+        parent_forum_id TEXT,
+        creator_id TEXT,
+        create_date TEXT,
+        views TEXT,
+        answers TEXT
+    );
+    '''
+    cursor.execute(create_table_query)
+
+    conn.commit()
+    conn.close()
+
+def insertTopics(topics_data):
+    conn = sqlite3.connect('topics.db')
+    cursor = conn.cursor()
+    
+    insert_query = '''
+    INSERT INTO users (
+        name, theme_id, parent_forum_id, creator_id, create_date, views, answers
+    ) VALUES (?, ?, ?, ?, ?, ?, ?);
+    '''
+
+    for topic_data in topics_data:
+        cursor.execute(insert_query, (
+            topic_data['name'],
+            topic_data['theme_id'],
+            str(topic_data['parent_forum_id']),
+            topic_data['creator_id'],
+            topic_data['create_date'],
+            topic_data['views'],
+            topic_data['answers']
+        ))
+
+    conn.commit()
+    conn.close()
