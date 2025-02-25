@@ -36,8 +36,8 @@ def getAllMessage(url):
     print(message_id_list)
 
     # получаем id форума
-    forum_id = re.findall(r'\d+', str(soup.find(class_='block-container lbContainer')['data-lb-id']))[0]
-    print(forum_id)
+    theme_id = re.findall(r'\d+', str(soup.find(class_='block-container lbContainer')['data-lb-id']))[0]
+    print(theme_id)
 
     for id in message_id_list:
         id_num = re.findall(r'\d+', id)[0] # численная часть id сообщения
@@ -133,7 +133,7 @@ def getAllMessage(url):
             message["text"] = text
             message['user_id'] = user_id
             message['Urls'] = Urls
-            message['forum_id'] = forum_id
+            message['theme_id'] = theme_id
             message['reply_message_id'] = replay_message_id
             message['likes_user_id'] = likes_user_id
             message['user_mention_id'] = user_mention_id
@@ -150,7 +150,7 @@ def getAllMessage(url):
         id,
         likes_user_id,
         user_id,
-        forum_id,
+        theme_id,
         reply_message_id,
         user_mention_id,
         
