@@ -4,6 +4,7 @@ from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 
+import dbUtils
 import getUserData
 
 categories = ["https://otomotiv-forum.com/categories/otomotiv-forum-com.1/",
@@ -39,7 +40,7 @@ def getLinksForThreadsData():
 
 
 def getUserDataViaThreads():
-    users = []  # временный массив, для сохранения инфы юзверов. Заменить на БД
+  #  users = []  # временный массив, для сохранения инфы юзверов. Заменить на БД
     # массив необходимый для отсечения ссылок повторяющихся каждую страницу
     not_to_check = []
     # выгрузка юзеров с первой страницы, включая недавно зарегистрировавшихся
@@ -50,7 +51,7 @@ def getUserDataViaThreads():
     # выгрузка оставшихся юзеров
     i = 1
     while True:
-        print(users)
+       # print(users)
         page = requests.get("https://otomotiv-forum.com/members/list/", {"page": str(i)})
         #print("страница №" + str(i))  # дебаг инфа
         src = page.text
@@ -68,7 +69,8 @@ def getUserDataViaThreads():
                         data = getUserData.getUserDataByUrl("https://otomotiv-forum.com" + UsersList.get('href'),
                                                             driver)
                         if int(data['Message_Count']) > 0:
-                            users.append(data)
+                           # users.append(data)
+                            dbUtils.insertUser(data)
                     except Exception as e:
                       #  print(e)
                         print("нет доступа к профилю: https://otomotiv-forum.com" + UsersList.get('href'))

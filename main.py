@@ -11,6 +11,8 @@ import getCategoriesData
 import getMessagesData
 import dbUtils
 
+dbUtils.createUserDb()
+linkGrabber.getUserDataViaThreads()
 
 #dbUtils.createUserDb()
 #dbUtils.createMessagesDB()
