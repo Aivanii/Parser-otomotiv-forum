@@ -57,7 +57,7 @@ def getForumsDataById(forum_id):
             creator_id = theme_info.find(class_='structItem-iconContainer').find('a')['data-user-id']
 
             # получем дату создания темы
-            create_date = theme_info.find(class_='structItem-startDate').find(class_='u-dt').text
+            create_date = theme_info.find(class_='structItem-startDate').find(class_='u-dt')['title']
 
             # сохраняем число просмотров
             views = theme_info.find(class_='pairs pairs--justified structItem-minor').find('dd').text
