@@ -10,19 +10,16 @@ import re
 from selenium.webdriver.chrome.options import Options
 
 
-def getForumsDataById(id):
-    url = f"https://otomotiv-forum.com/categories/avtoehlektronika.{id}/"
+def getForumsDataById(id,driver):
+    url = f"https://otomotiv-forum.com/categories/{id}/"
     # Массив для категорий
     forums =[]
     # Navigating to the page
-    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()),
-                              options=Options().add_argument("--disable-blink-features=AutomationControlled"))
+
     driver.get(url)
     print(url)
     # Ждем, когда нужный нам элемент загрузится
-    WebDriverWait(driver, 30).until(
-        EC.presence_of_element_located((By.CSS_SELECTOR, 'body[data-template="category_view"]'))
-    )
+
 
     # Получаем исходный код страницы
     page_source = driver.page_source

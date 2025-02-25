@@ -10,32 +10,35 @@ import re
 from selenium.webdriver.chrome.options import Options
 
 
-def getForumsDataById(forum_id):
+def getForumsDataById(forum_id,driver):
    # url = f"https://otomotiv-forum.com/forums/{id}/page-{page_num}"
 
     # Массив для категорий
     themes =[]
     # Navigating to the page
-    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()),
-                              options=Options().add_argument("--disable-blink-features=AutomationControlled"))
+    # driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()),
+    #                           options=Options().add_argument("--disable-blink-features=AutomationControlled"))
     url = f"https://otomotiv-forum.com/forums/{forum_id}"
     driver.get(url)
-    WebDriverWait(driver, 30).until(
-        EC.presence_of_element_located((By.CSS_SELECTOR, 'body[data-template="forum_view"]'))
-    )
+    # WebDriverWait(driver, 30).until(
+    #     EC.presence_of_element_located((By.CSS_SELECTOR, 'body[data-template="forum_view"]'))
+    # )
     driver.get(url)
     soup = BeautifulSoup(driver.page_source, 'html.parser')
 
     # получаем количество страниц с темами на форуме
-    page_count = int(soup.find_all(class_='pageNav-page')[-1].find('a').text)
-    print(page_count)
+    try:
+        page_count = int(soup.find_all(class_='pageNav-page')[-1].find('a').text)
+    except:
+        page_count = 1
+    # print(page_count)
 
 
 
     for page_num in range(1, page_count+1):
         url = f"https://otomotiv-forum.com/forums/{forum_id}/page-{page_num}"
         driver.get(url)
-        print(url)
+       # print(url)
         # Анализируем страницу с помощью BeautifulSoup
         soup = BeautifulSoup(driver.page_source, 'html.parser')
 
@@ -54,7 +57,11 @@ def getForumsDataById(forum_id):
             theme_id = re.findall(r'\d+', theme_info_class_name)[0]
 
             # получаем id пользователя создавшего форум
-            creator_id = theme_info.find(class_='structItem-iconContainer').find('a')['data-user-id']
+            try:
+                creator_id = theme_info.find(class_='structItem-iconContainer').find('a')['data-user-id']
+            except:
+                print(theme_id, 'del')
+
 
             # получем дату создания темы
             create_date = theme_info.find(class_='structItem-startDate').find(class_='u-dt')['title']
@@ -76,11 +83,8 @@ def getForumsDataById(forum_id):
             #добовляем в общий список тем
             themes.append(theme)
 
-
-
-
-
-    print(themes)
+    return themes
+   # print(themes)
 """{
        name,
        theme_id,

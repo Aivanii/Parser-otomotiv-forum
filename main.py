@@ -1,7 +1,12 @@
+from bs4 import BeautifulSoup
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.by import By
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
+import re
+from selenium.webdriver.chrome.options import Options
 
 import getForumInfo
 import getForums
@@ -11,8 +16,22 @@ import getCategoriesData
 import getMessagesData
 import dbUtils
 
-dbUtils.createUserDb()
-linkGrabber.getUserDataViaThreads()
+# dbUtils.createCategoriesDB()
+# dbUtils.insertCategories(getCategoriesData.getCategoriesDataByUrl('https://otomotiv-forum.com/'))
+
+driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()),
+                         options=Options().add_argument("--disable-blink-features=AutomationControlled"))
+driver.get('https://otomotiv-forum.com/categories/104/')
+WebDriverWait(driver, 30).until(
+        EC.presence_of_element_located((By.CSS_SELECTOR, 'body[data-template="category_view"]'))
+    )
+
+dbUtils.createTopicsDB()
+print(dbUtils.forumsId())
+for i in range(208):
+    dbUtils.insertTopics(getForumInfo.getForumsDataById(i, driver))
+
+
 
 #dbUtils.createUserDb()
 #dbUtils.createMessagesDB()

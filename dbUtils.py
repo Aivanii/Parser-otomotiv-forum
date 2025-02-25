@@ -143,6 +143,17 @@ def insertCategories(categories_data):
     conn.commit()
     conn.close()
 
+def categoriesId():
+    conn = sqlite3.connect('categories.db')
+    cursor = conn.cursor()
+
+    select_query = '''
+        SELECT category_id from users
+        '''
+    req = cursor.execute(select_query).fetchall()
+
+    conn.close()
+    return req
 def createTopicsDB():
     conn = sqlite3.connect('topics.db')
     cursor = conn.cursor()
@@ -186,3 +197,55 @@ def insertTopics(topics_data):
 
     conn.commit()
     conn.close()
+
+
+def createForumsDB():
+    conn = sqlite3.connect('forums.db')
+    cursor = conn.cursor()
+    create_table_query = '''
+    CREATE TABLE IF NOT EXISTS users (
+        forum_id INTEGER PRIMARY KEY,
+        name TEXT,
+        themes_count TEXT,
+        message_count TEXT
+        
+    );
+    '''
+    cursor.execute(create_table_query)
+
+    conn.commit()
+    conn.close()
+
+
+def insertForums(forums_data):
+    conn = sqlite3.connect('forums.db')
+    cursor = conn.cursor()
+
+    insert_query = '''
+    INSERT INTO users (
+        forum_id, name, themes_count, message_count
+    ) VALUES (?, ?, ?, ?);
+    '''
+
+    for forum_data in forums_data:
+        cursor.execute(insert_query, (
+            forum_data['forum_id'],
+            forum_data['name'],
+            forum_data['themes_count'],
+            forum_data['message_count']
+        ))
+
+    conn.commit()
+    conn.close()
+
+def forumsId():
+    conn = sqlite3.connect('forums.db')
+    cursor = conn.cursor()
+
+    select_query = '''
+        SELECT forum_id from users
+        '''
+    req = cursor.execute(select_query).fetchall()
+
+    conn.close()
+    return req
